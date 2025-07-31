@@ -6,7 +6,7 @@
   background: white;
   border-radius: 16px;
   padding: 2rem;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  box-shadow: 0 8px 25px rgb(0 0 0 / 8%);
   margin-bottom: 2rem;
 }
 
@@ -34,12 +34,12 @@
 
 .analysis-option.selected {
   border-color: #667eea;
-  background: rgba(102, 126, 234, 0.1);
+  background: rgb(102 126 234 / 10%);
 }
 
 .analysis-option h4 {
   color: #1e293b;
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.5rem;
   font-size: 1.1rem;
   font-weight: 600;
 }
@@ -88,19 +88,19 @@
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 5%);
 }
 
 .analysis-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
   border-color: #cbd5e0;
 }
 
 .analysis-card.selected {
   border-color: #3b82f6;
   background: #f8faff;
-  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.15);
+  box-shadow: 0 4px 16px rgb(59 130 246 / 15%);
 }
 
 .card-content {
@@ -132,7 +132,7 @@
 }
 
 /* Responsive Design */
-@media (max-width: 1024px) {
+@media (width <= 1024px) {
   .analysis-cards {
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
@@ -143,7 +143,7 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (width <= 640px) {
   .analysis-cards {
     grid-template-columns: 1fr;
   }

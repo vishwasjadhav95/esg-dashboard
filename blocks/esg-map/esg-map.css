@@ -1,165 +1,340 @@
+/* ESG Map Block */
 .esg-map-block {
   margin: 2rem 0;
-  max-width: 1200px;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgb(248 250 252 / 80%) 0%, rgb(241 245 249 / 80%) 100%);
+  border-radius: 1rem;
+  box-shadow: 0 4px 20px rgb(0 0 0 / 8%);
 }
 
 .map-header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .map-header h2 {
-  margin: 0;
-  font-size: 2rem;
-  color: #2d3748;
-  font-weight: bold;
+  margin: 0 0 0.5rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #2d3748 0%, #4a5568 50%, #2d3748 100%);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
 }
 
-.map-interface {
-  background: white;
-  border-radius: 16px;
-  padding: 2rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e2e8f0;
-}
-
-.map-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
-
-.map-info h3 {
-  margin: 0 0 0.5rem 0;
-  font-size: 1.25rem;
-  color: #2d3748;
-  font-weight: 600;
-}
-
-.map-info p {
+.map-header p {
   margin: 0;
   color: #64748b;
-  font-size: 0.9rem;
+  font-size: 1rem;
+  line-height: 1.5;
 }
 
-.selection-counter {
-  background: rgba(59, 130, 246, 0.1);
-  border: 1px solid rgba(59, 130, 246, 0.3);
-  border-radius: 8px;
-  padding: 0.75rem;
-  font-size: 0.9rem;
-  color: #1e40af;
+.map-header p strong {
+  color: #1e293b;
   font-weight: 600;
+}
+
+/* Map Container */
+.map-container {
+  position: relative;
+  margin-bottom: 1.5rem;
+  background: rgb(255 255 255 / 95%);
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 2px 10px rgb(0 0 0 / 5%);
 }
 
 #map {
-  width: 100%;
-  height: 400px;
   border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  margin-bottom: 1.5rem;
-  z-index: 1;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
 }
 
-.leaflet-container {
-  border-radius: 12px;
-}
-
-/* Leaflet popup customization */
-.leaflet-popup-content-wrapper {
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.leaflet-popup-content {
-  margin: 8px 12px;
-  font-family: inherit;
-}
-
-/* Selected countries tags */
-.selected-countries {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  min-height: 40px;
-}
-
-.country-tag {
-  display: inline-flex;
-  align-items: center;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+/* Map Tooltip */
+.map-tooltip {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgb(0 0 0 / 75%);
   color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.9rem;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
   font-weight: 500;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 30%);
+  backdrop-filter: blur(4px);
+}
+
+/* Selected Countries Section */
+.selected-countries {
+  background: linear-gradient(135deg, rgb(255 255 255 / 95%) 0%, rgb(248 250 252 / 90%) 100%);
+  border-radius: 16px;
+  padding: 1.25rem;
+  box-shadow: 0 4px 20px rgb(0 0 0 / 8%);
+  border: 1px solid rgb(226 232 240 / 50%);
+  backdrop-filter: blur(10px);
+}
+
+#selected-countries-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+  min-height: 60px;
+  align-items: start;
+}
+
+.no-selection {
+  grid-column: 1 / -1;
+  color: #64748b;
+  font-style: italic;
+  text-align: center;
+  padding: 1.5rem;
+  background: rgb(248 250 252 / 60%);
+  border-radius: 12px;
+  border: 2px dashed #cbd5e1;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 0.5rem;
-  box-shadow: 0 2px 4px rgba(99, 102, 241, 0.3);
-  transition: all 0.2s ease;
 }
 
-.country-tag:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+.no-selection::before {
+  content: '🗺️';
+  font-size: 1.25rem;
 }
 
-.remove-btn {
-  background: rgba(255, 255, 255, 0.2);
+/* Selected Country Tags - Compact */
+.selected-country-tag {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #fff 0%, #f8fafc 100%);
+  border: 2px solid rgb(59 130 246 / 20%);
+  color: #1e293b;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 6%);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: slide-in 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.selected-country-tag::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #3b82f6 0%, #1d4ed8 50%, #3b82f6 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.selected-country-tag:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 10%);
+  border-color: rgb(59 130 246 / 40%);
+  background: linear-gradient(135deg, #fff 0%, #f1f5f9 100%);
+}
+
+.country-flag {
+  font-size: 1.125rem;
+  line-height: 1;
+  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 10%));
+}
+
+.country-name {
+  font-weight: 600;
+  color: #1e293b;
+  flex: 1;
+  font-size: 0.875rem;
+}
+
+.remove-country {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
   color: white;
-  border: none;
+  width: 1.5rem;
+  height: 1.5rem;
   border-radius: 50%;
-  width: 18px;
-  height: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-weight: bold;
-  font-size: 12px;
-  transition: background-color 0.2s ease;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+  transition: all 0.25s ease;
+  box-shadow: 0 1px 6px rgb(239 68 68 / 30%);
+  border: 2px solid rgb(255 255 255 / 30%);
 }
 
-.remove-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
+.remove-country:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  transform: scale(1.1) rotate(90deg);
+  box-shadow: 0 2px 8px rgb(239 68 68 / 40%);
 }
 
-/* Map marker styles */
-.leaflet-interactive {
-  cursor: pointer;
-  transition: all 0.2s ease;
+.remove-country:active {
+  transform: scale(0.95) rotate(90deg);
 }
 
-.leaflet-interactive:hover {
-  stroke-width: 3 !important;
+/* Custom Popup Styling */
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgb(0 0 0 / 15%) !important;
 }
 
-/* Responsive design */
-@media (max-width: 768px) {
-  .map-interface {
-    padding: 1.5rem;
+.country-popup {
+  text-align: center;
+  padding: 0.5rem;
+}
+
+.popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.popup-flag {
+  font-size: 1.25rem;
+}
+
+.popup-name {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.popup-code {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+}
+
+.popup-action {
+  font-size: 0.75rem;
+  color: #3b82f6;
+  font-weight: 500;
+}
+
+/* Animation */
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
   }
-  
-  .map-info {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
-  
-  #map {
-    height: 300px;
+}
+
+/* Responsive Design */
+@media (width <= 768px) {
+  .esg-map-block {
+    padding: 1rem;
+    margin: 1rem 0;
   }
-  
+
   .map-header h2 {
     font-size: 1.5rem;
   }
-  
-  .country-tag {
+
+  .map-container {
+    padding: 0.75rem;
+  }
+
+  #map {
+    height: 300px !important;
+  }
+
+  .map-tooltip {
+    font-size: 11px;
+    padding: 6px 10px;
+  }
+
+  .selected-countries {
+    padding: 1rem;
+  }
+
+  #selected-countries-list {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.5rem;
+  }
+
+  .selected-country-tag {
     font-size: 0.8rem;
-    padding: 0.4rem 0.8rem;
+    padding: 0.625rem 0.75rem;
+  }
+
+  .country-flag {
+    font-size: 1rem;
+  }
+
+  .country-name {
+    font-size: 0.8rem;
+  }
+
+  .remove-country {
+    width: 1.25rem;
+    height: 1.25rem;
+    font-size: 0.7rem;
+  }
+}
+
+@media (width <= 480px) {
+  .esg-map-block {
+    padding: 0.75rem;
+  }
+
+  .map-header h2 {
+    font-size: 1.3rem;
+    gap: 0.5rem;
+  }
+
+  .map-header p {
+    font-size: 0.9rem;
+  }
+
+  .selected-countries {
+    padding: 0.75rem;
+  }
+
+  #selected-countries-list {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .selected-country-tag {
+    padding: 0.625rem 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  .country-name {
+    font-size: 0.8rem;
+  }
+
+  .no-selection {
+    padding: 1.25rem;
+    font-size: 0.85rem;
+  }
+
+  .no-selection::before {
+    font-size: 1.125rem;
   }
 } 

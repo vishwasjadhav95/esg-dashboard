@@ -1,4 +1,4 @@
 mountpoints:
   /:
-    url: https://content.da.live/vishwasjadhav95/desg-dashboard/
+    url: https://content.da.live/vishwasjadhav95/esg-dashboard/
     type: markup

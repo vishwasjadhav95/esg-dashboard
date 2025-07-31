@@ -1,184 +1,172 @@
-// ESG Metrics Block
+/* eslint-disable no-console */
 export default function decorate(block) {
-  // Clear the block content
-  block.textContent = '';
-  
-  // Create the main container
-  const container = document.createElement('div');
-  container.className = 'esg-metrics-container';
-  
-  // Create metrics section
-  const metricsSection = document.createElement('div');
-  metricsSection.className = 'metrics-section';
-  metricsSection.id = 'esg-metrics';
-  metricsSection.style.display = 'none'; // Initially hidden
-  
-  // Metric cards
-  const metrics = [
-    { id: 'overallScore', label: 'Overall ESG Score', value: '0', icon: '📊' },
-    { id: 'environmentalScore', label: 'Environmental Score', value: '0', icon: '🌱' },
-    { id: 'socialScore', label: 'Social Score', value: '0', icon: '👥' },
-    { id: 'governanceScore', label: 'Governance Score', value: '0', icon: '🏛️' },
-    { id: 'improvementAreas', label: 'Improvement Areas', value: '0', icon: '🎯' }
-  ];
-  
-  metrics.forEach(metric => {
-    const metricCard = document.createElement('div');
-    metricCard.className = 'metric-card';
-    
-    const metricIcon = document.createElement('div');
-    metricIcon.className = 'metric-icon';
-    metricIcon.textContent = metric.icon;
-    
-    const metricValue = document.createElement('div');
-    metricValue.className = 'metric-value';
-    metricValue.id = metric.id;
-    metricValue.textContent = metric.value;
-    
-    const metricLabel = document.createElement('div');
-    metricLabel.className = 'metric-label';
-    metricLabel.textContent = metric.label;
-    
-    metricCard.appendChild(metricIcon);
-    metricCard.appendChild(metricValue);
-    metricCard.appendChild(metricLabel);
-    
-    metricsSection.appendChild(metricCard);
-  });
-  
-  container.appendChild(metricsSection);
-  
-  // Create improvements section
-  const improvementsSection = document.createElement('div');
-  improvementsSection.className = 'improvements-section';
-  improvementsSection.id = 'esg-improvements';
-  improvementsSection.style.display = 'none'; // Initially hidden
-  
-  const improvementsTitle = document.createElement('h3');
-  improvementsTitle.textContent = '📈 Improvement Recommendations';
-  improvementsTitle.style.cssText = 'margin-bottom: 2rem; color: #1e293b; font-size: 1.5rem; font-weight: 600;';
-  
-  const improvementsContainer = document.createElement('div');
-  improvementsContainer.className = 'improvements-grid';
-  improvementsContainer.id = 'improvementsContainer';
-  
-  improvementsSection.appendChild(improvementsTitle);
-  improvementsSection.appendChild(improvementsContainer);
-  
-  container.appendChild(improvementsSection);
-  block.appendChild(container);
-  
-  // Setup event listeners
-  setupEventListeners();
-  
-  // Setup event listeners
-  function setupEventListeners() {
-    document.addEventListener('esg-analysis-complete', handleAnalysisComplete);
-  }
-  
-  // Handle analysis complete event
-  function handleAnalysisComplete(event) {
-    const { data, parameters, countries, analysisType } = event.detail;
-    
-    // Show metrics and improvements
-    metricsSection.style.display = 'grid';
-    improvementsSection.style.display = 'block';
-    
-    // Update metrics with animation
-    updateMetrics(data);
-    
-    // Update improvements
-    updateImprovements(data.recommendations);
-  }
-  
-  // Update metrics with animation
-  function updateMetrics(data) {
-    const metricsData = {
-      overallScore: data.overall.score,
-      environmentalScore: data.overall.environmental,
-      socialScore: data.overall.social,
-      governanceScore: data.overall.governance,
-      improvementAreas: data.overall.improvementAreas
-    };
-    
-    // Animate each metric
-    Object.keys(metricsData).forEach(metricId => {
-      const element = document.getElementById(metricId);
-      const targetValue = metricsData[metricId];
-      
-      animateNumber(element, 0, targetValue, 1500);
+    // Add container class
+    block.classList.add('esg-metrics-block');
+
+    // Extract metrics from table
+    const metricsConfig = [];
+    const container = block;
+
+    [...block.children].forEach((row) => {
+        const cells = [...row.children];
+        if (cells.length >= 2) {
+            const getText = (cell) => {
+                const p = cell.querySelector('p');
+                return p ? p.textContent.trim() : cell.textContent.trim();
+            };
+
+            const name = getText(cells[0]);
+            const description = getText(cells[1]);
+
+            if (name && description && name !== '---') {
+                metricsConfig.push({
+                    name,
+                    description,
+                });
+            }
+        }
     });
-  }
-  
-  // Animate number counting
-  function animateNumber(element, start, end, duration) {
-    const range = end - start;
-    const increment = range / (duration / 16); // 60fps
-    let current = start;
-    
-    const timer = setInterval(() => {
-      current += increment;
-      
-      if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
-        current = end;
-        clearInterval(timer);
-      }
-      
-      element.textContent = Math.floor(current);
-    }, 16);
-  }
-  
-  // Update improvements section
-  function updateImprovements(recommendations) {
-    const container = document.getElementById('improvementsContainer');
-    
-    container.innerHTML = recommendations.map(rec => `
-      <div class="improvement-card ${rec.priority}">
-        <div class="improvement-priority priority-${rec.priority}">
-          ${rec.priority.toUpperCase()} PRIORITY
-        </div>
-        <h4>${rec.title}</h4>
-        <p>${rec.description}</p>
-      </div>
-    `).join('');
-  }
-  
-  // Add some additional improvement recommendations
-  function generateAdditionalRecommendations(parameters, countries) {
-    const additionalRecs = [
-      {
-        priority: 'medium',
-        title: 'Strengthen Supply Chain Transparency',
-        description: 'Implement blockchain-based tracking for better ESG compliance monitoring across the supply chain'
-      },
-      {
-        priority: 'low',
-        title: 'Enhance Stakeholder Engagement',
-        description: 'Create regular forums for community feedback and incorporate stakeholder input into ESG strategy'
-      },
-      {
-        priority: 'high',
-        title: 'Accelerate Digital Transformation',
-        description: 'Leverage AI and IoT technologies to optimize resource usage and reduce environmental impact'
-      }
-    ];
-    
-    return additionalRecs;
-  }
-  
-  // Store reference for other blocks
-  window.esgMetrics = {
-    showMetrics: () => {
-      metricsSection.style.display = 'grid';
-      improvementsSection.style.display = 'block';
-    },
-    hideMetrics: () => {
-      metricsSection.style.display = 'none';
-      improvementsSection.style.display = 'none';
-    },
-    updateMetrics: (data) => {
-      updateMetrics(data);
-      updateImprovements(data.recommendations);
+
+    // Helper functions
+    function setupEventListeners() {
+        // Listen for analysis complete event
+        window.addEventListener('esg-analysis-complete', handleAnalysisComplete);
     }
-  };
+
+    function handleAnalysisComplete(event) {
+        const { data } = event.detail;
+
+        // Show metrics section
+        container.querySelector('.esg-metrics-table').style.display = 'block';
+        container.querySelector('.metrics-empty')?.remove();
+
+        // Update metrics with real data
+        updateMetrics(data);
+
+        // Update improvements
+        updateImprovements(data);
+    }
+
+    function updateMetrics(data) {
+        const metrics = [
+            {
+                key: 'overall',
+                value: data.overall?.score || 0,
+                label: 'Overall ESG Score',
+                color: 'blue',
+            },
+            {
+                key: 'environmental',
+                value: data.overall?.environmental || 0,
+                label: 'Environmental Score',
+                color: 'green',
+            },
+            {
+                key: 'social',
+                value: data.overall?.social || 0,
+                label: 'Social Score',
+                color: 'purple',
+            },
+            {
+                key: 'governance',
+                value: data.overall?.governance || 0,
+                label: 'Governance Score',
+                color: 'orange',
+            },
+            {
+                key: 'improvements',
+                value: data.recommendations?.length || 0,
+                label: 'Improvement Areas',
+                color: 'red',
+            },
+        ];
+
+        metrics.forEach((metric, index) => {
+            setTimeout(() => {
+                const element = container.querySelector(`[data-metric="${metric.key}"] .metric-value`);
+                if (element) {
+                    animateNumber(element, 0, metric.value, 1000);
+                }
+            }, index * 200);
+        });
+    }
+
+    function updateImprovements(data) {
+        const improvementsContainer = container.querySelector('.improvement-section');
+        if (!improvementsContainer || !data.recommendations) return;
+
+        const limitedRecommendations = data.recommendations.slice(0, 4);
+        improvementsContainer.innerHTML = `
+      <h4>🎯 Key Improvement Areas</h4>
+      <div class="improvement-grid">
+        ${limitedRecommendations.map((rec) => `
+          <div class="improvement-item">
+            <div class="improvement-header">
+              <span class="priority ${rec.priority || 'medium'}">${rec.priority || 'Medium'}</span>
+              <span class="category">ESG</span>
+            </div>
+            <p>${rec.text}</p>
+          </div>
+        `).join('')}
+      </div>
+    `;
+    }
+
+    function animateNumber(element, start, end, duration) {
+        const startTime = performance.now();
+        const animate = (currentTime) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const current = Math.round(start + (end - start) * progress);
+            element.textContent = current;
+
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            }
+        };
+        requestAnimationFrame(animate);
+    }
+
+    // Create the metrics layout
+    block.innerHTML = `
+    <div class="esg-metrics-table">
+      <div class="metrics-header">
+        <h2>📊 ESG Performance Metrics</h2>
+        <p>Key performance indicators based on analysis results</p>
+      </div>
+      
+      <div class="metrics-grid">
+        ${metricsConfig.map((metric, index) => {
+        const metricKeys = ['overall', 'environmental', 'social', 'governance', 'improvements'];
+        const colors = ['blue', 'green', 'purple', 'orange', 'red'];
+        return `
+          <div class="metric-card" data-metric="${metricKeys[index] || 'default'}">
+            <div class="metric-header">
+              <h3>${metric.name}</h3>
+            </div>
+            <div class="metric-value ${colors[index] || 'blue'}">--</div>
+            <div class="metric-description">${metric.description}</div>
+            <div class="metric-progress">
+              <div class="progress-bar">
+                <div class="progress-fill ${colors[index] || 'blue'}"></div>
+              </div>
+            </div>
+          </div>
+        `;
+    }).join('')}
+      </div>
+      
+      <div class="improvement-section">
+        <p>Complete analysis to see improvement recommendations</p>
+      </div>
+    </div>
+    
+    <div class="metrics-empty">
+      <h3>📊 Metrics Ready</h3>
+      <p>Run an ESG analysis to see detailed performance metrics and recommendations.</p>
+    </div>
+  `;
+
+    // Setup event listeners
+    setupEventListeners();
 } 
